@@ -6,7 +6,31 @@ class Form extends Component {
   state = {
     banana: true,
     test: "",
+    checkboxes: {},
   };
+
+  checkboxes = [
+    {
+      display: "Golden Retriever",
+      value: "goldenRetriever",
+    },
+    {
+      display: "Pug",
+      value: "pug",
+    },
+    {
+      display: "Chihuahua",
+      value: "chihuahua",
+    },
+    {
+      display: "Huskie",
+      value: "huskie",
+    },
+    {
+        display: "Pomeranian",
+        value: "pomeranian"
+    }
+  ];
 
   // When we use a class component, we have access to lifecycle methods.
   componentDidMount() {
@@ -15,16 +39,27 @@ class Form extends Component {
     // debugger;
     // Because we are in a class component, this, refers to the "object" or class itself.
     // setState is a method built in to all class components.
+    // this.setState({
+    //   banana: false,
+    // });
+
+    const arrayOfObjects = this.checkboxes.map((checkbox) => checkbox.value);
+    console.log(arrayOfObjects);
+    let newObject = {};
+    for (let i = 0; i < arrayOfObjects.length; i++) {
+      newObject[arrayOfObjects[i]] = false;
+    }
+    console.log(newObject);
     this.setState({
-      banana: false,
+      checkboxes: newObject,
     });
   }
 
   handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
-    this.setState({
-      [name]: checked,
-    });
+    const newState = { ...this.state };
+    newState.checkboxes[[name]] = checked;
+    this.setState(newState);
   };
 
   handleInputChange = (event) => {
@@ -45,14 +80,30 @@ class Form extends Component {
             value={this.state.test}
             onChange={this.handleInputChange}
           />
-          <input
-            type="checkbox"
-            id="banana"
-            name="banana"
-            checked={this.state.banana}
-            onChange={this.handleCheckboxChange}
-          />
-          <label for="scales">Scales</label>
+          {this.checkboxes.map((checkbox, index) => (
+            <div key={index}>
+              <input
+                type="checkbox"
+                id={checkbox.value}
+                name={checkbox.value}
+                checked={this.state.checkboxes[[checkbox.value]]}
+                onChange={this.handleCheckboxChange}
+              />
+              <label htmlFor={checkbox.value}>{checkbox.display}</label>
+            </div>
+          ))}
+          {/* <div>
+            <input
+              type="checkbox"
+              id={this.checkboxes[0].value}
+              name={this.checkboxes[0].value}
+              checked={this.state[this.checkboxes[0].value]}
+              onChange={this.handleCheckboxChange}
+            />
+            <label htmlFor={this.checkboxes[0].value}>
+              {this.checkboxes[0].display}
+            </label>
+          </div> */}
         </div>
       </div>
     );
